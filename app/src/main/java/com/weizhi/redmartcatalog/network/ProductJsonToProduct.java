@@ -4,10 +4,8 @@ import android.support.annotation.NonNull;
 
 import com.weizhi.redmartcatalog.model.Product;
 import com.weizhi.redmartcatalog.model.ProductImage;
-import com.weizhi.redmartcatalog.network.response.ImageJson;
-import com.weizhi.redmartcatalog.network.response.ProductJson;
-
-import java.util.List;
+import com.weizhi.redmartcatalog.network.jsonpojo.ImageJson;
+import com.weizhi.redmartcatalog.network.jsonpojo.ProductJson;
 
 /**
  * @author Lin Weizhi (ecc.weizhi@gmail.com)

@@ -1,4 +1,4 @@
-package com.weizhi.redmartcatalog.network.response;
+package com.weizhi.redmartcatalog.network.jsonpojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -10,8 +10,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ProductLife {
-    @JsonProperty("time") public int time;
-    @JsonProperty("metric") public String metric;
-    @JsonProperty("is_minimum") public boolean isMinimum;
+public class DetailJson {
+    @JsonProperty("product") public ProductJson product;
 }

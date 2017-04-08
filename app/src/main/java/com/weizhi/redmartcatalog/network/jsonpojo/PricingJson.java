@@ -1,4 +1,4 @@
-package com.weizhi.redmartcatalog.network.response;
+package com.weizhi.redmartcatalog.network.jsonpojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
