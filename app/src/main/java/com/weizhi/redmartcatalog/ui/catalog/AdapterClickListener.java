@@ -1,4 +1,4 @@
-package com.weizhi.redmartcatalog.ui;
+package com.weizhi.redmartcatalog.ui.catalog;
 
 /**
  * @author Lin Weizhi (ecc.weizhi@gmail.com)

@@ -1,6 +1,7 @@
-package com.weizhi.redmartcatalog.ui;
+package com.weizhi.redmartcatalog.ui.catalog;
 
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,9 +9,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.weizhi.redmartcatalog.R;
 import com.weizhi.redmartcatalog.model.Product;
-import com.weizhi.redmartcatalog.model.ProductImage;
+import com.weizhi.redmartcatalog.network.WsConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,24 +24,19 @@ import java.util.List;
 public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.ViewHolder> implements
         AdapterClickListener,
         LoadMoreScrollListener.LoadMoreCallback{
-    private static final int PAGE_SIZE = 20;
+    public static final int PAGE_SIZE = 20;
 
     private AdapterInterface mParent;
+    private Fragment mFragment;
 
     private List<Product> mProductList = new ArrayList<>();
-//    private boolean mIsLoadingMore = false;
+    private boolean mIsLoadingMore = false;
     private boolean mHasNoMoreData = false;
     private int mLastLoadedPage = -1;
 
-    public CatalogAdapter(@NonNull AdapterInterface parent){
+    public CatalogAdapter(@NonNull AdapterInterface parent, Fragment fragment){
         mParent = parent;
-        List<Product> productList = new ArrayList<>();
-        for(int i=0; i<PAGE_SIZE; i++){
-            ProductImage[] images = new ProductImage[1];
-            productList.add(new Product(1, "title", "desc", 1, 1, false,
-                    new ProductImage(0, 0, "", 1), images));
-        }
-        mProductList = productList;
+        mFragment = fragment;
     }
 
     @Override
@@ -51,7 +48,13 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        Product product = mProductList.get(position);
+        holder.mTitleText.setText(product.getTitle());
 
+        Glide.with(mFragment)
+                .load(WsConstants.IMAGE_BASE_URL+product.getMainImage().path)
+                .fitCenter()
+                .into(holder.mProductImage);
     }
 
     @Override
@@ -70,7 +73,10 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.ViewHold
             return;
         }
 
-        mParent.fetchCatalog(mLastLoadedPage + 1, PAGE_SIZE);
+        if(!mIsLoadingMore){
+            mIsLoadingMore = true;
+            mParent.fetchCatalog(mLastLoadedPage + 1, PAGE_SIZE);
+        }
     }
 
     public void updateDataSet(int page, List<Product> productList){
@@ -89,7 +95,12 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.ViewHold
             }
 
             mLastLoadedPage = Math.max(mLastLoadedPage, page);
+            mIsLoadingMore = false;
         }
+    }
+
+    public void setIsLoadingMore(boolean isLoadingMore){
+        mIsLoadingMore = isLoadingMore;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements

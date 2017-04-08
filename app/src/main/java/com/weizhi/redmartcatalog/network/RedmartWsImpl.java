@@ -27,18 +27,19 @@ import timber.log.Timber;
  */
 
 public class RedmartWsImpl implements RedmartWs {
-    private static final String API_VERSION = "1.5.7";
+    private final String mApiVersion;
     private final RetrofitWs webService;
     private final ObjectMapper mapper;
 
-    public RedmartWsImpl(@NonNull String baseUrl){
+    public RedmartWsImpl(@NonNull String baseUrl, @NonNull String apiVersion){
 //        OkHttpClient client = new OkHttpClient.Builder()
 //                .readTimeout(60, TimeUnit.MINUTES)
 //                .connectTimeout(60, TimeUnit.MINUTES)
 //                .build();
 
+        mApiVersion = apiVersion;
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(interceptor)
                 .build();
@@ -56,7 +57,7 @@ public class RedmartWsImpl implements RedmartWs {
     @NonNull
     @Override
     public RestResponse<List<Product>> search(int page, int pageSize) {
-        Call<SearchJson> call = webService.search(API_VERSION, page, pageSize);
+        Call<SearchJson> call = webService.search(mApiVersion, page, pageSize);
 
         List<Product> payload = new ArrayList<>();
         Integer httpStatusCode = null;
@@ -84,7 +85,7 @@ public class RedmartWsImpl implements RedmartWs {
     @NonNull
     @Override
     public RestResponse<Product> getProduct(long productId) {
-        Call<DetailJson> call = webService.getProduct(API_VERSION, productId);
+        Call<DetailJson> call = webService.getProduct(mApiVersion, productId);
 
         Product payload = null;
         Integer httpStatusCode = null;

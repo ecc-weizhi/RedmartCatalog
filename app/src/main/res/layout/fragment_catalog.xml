@@ -5,8 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.weizhi.redmartcatalog.ui.CatalogActivityFragment"
-    tools:showIn="@layout/activity_catalog">
+    tools:context="com.weizhi.redmartcatalog.ui.catalog.CatalogFragment"
+    tools:showIn="@layout/activity_main">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/catalog_recycler"
