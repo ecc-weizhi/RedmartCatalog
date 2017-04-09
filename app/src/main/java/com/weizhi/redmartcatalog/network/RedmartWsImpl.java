@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.weizhi.redmartcatalog.model.Product;
-import com.weizhi.redmartcatalog.network.jsonpojo.DetailJson;
+import com.weizhi.redmartcatalog.network.jsonpojo.SingleItemJson;
 import com.weizhi.redmartcatalog.network.jsonpojo.ProductJson;
 import com.weizhi.redmartcatalog.network.jsonpojo.SearchJson;
 
@@ -85,13 +85,13 @@ public class RedmartWsImpl implements RedmartWs {
     @NonNull
     @Override
     public RestResponse<Product> getProduct(long productId) {
-        Call<DetailJson> call = webService.getProduct(mApiVersion, productId);
+        Call<SingleItemJson> call = webService.getProduct(mApiVersion, productId);
 
         Product payload = null;
         Integer httpStatusCode = null;
         Throwable error = null;
         try {
-            retrofit2.Response<DetailJson> response = call.execute();
+            retrofit2.Response<SingleItemJson> response = call.execute();
             if(response.isSuccessful()){
                 Deserializer<ProductJson, Product> deserializer = new ProductJsonToProduct();
                 payload = deserializer.deserializeFrom(response.body().product);
@@ -111,7 +111,7 @@ public class RedmartWsImpl implements RedmartWs {
                                 @Query("pageSize") int pageSize);
 
         @GET("v{apiVersion}/catalog/products/{id}")
-        Call<DetailJson> getProduct(@Path("apiVersion") String apiVersion,
-                                    @Path("id") long productId);
+        Call<SingleItemJson> getProduct(@Path("apiVersion") String apiVersion,
+                                        @Path("id") long productId);
     }
 }

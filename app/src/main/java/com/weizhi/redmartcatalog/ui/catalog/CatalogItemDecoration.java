@@ -10,11 +10,9 @@ import android.view.View;
 
 public class CatalogItemDecoration extends RecyclerView.ItemDecoration {
     private int mSpacePx;
-    private int mSpanCount;
 
-    public CatalogItemDecoration(int spacePx, int spanCount) {
+    public CatalogItemDecoration(int spacePx) {
         mSpacePx = spacePx;
-        mSpanCount = spanCount;
     }
 
     @Override
@@ -22,11 +20,8 @@ public class CatalogItemDecoration extends RecyclerView.ItemDecoration {
                                View view,
                                RecyclerView parent,
                                RecyclerView.State state) {
-        int position = parent.getChildAdapterPosition(view);
-
-        // Top margin
-        outRect.top = position < mSpanCount ? mSpacePx : 0;
-        outRect.left = position % 3 == 0 ? mSpacePx : 0;
+        outRect.top = mSpacePx;
+        outRect.left = mSpacePx;
         outRect.right = mSpacePx;
         outRect.bottom = mSpacePx;
     }

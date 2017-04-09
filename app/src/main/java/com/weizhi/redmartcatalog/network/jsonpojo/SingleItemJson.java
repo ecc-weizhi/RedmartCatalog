@@ -10,6 +10,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DetailJson {
+public class SingleItemJson {
     @JsonProperty("product") public ProductJson product;
 }

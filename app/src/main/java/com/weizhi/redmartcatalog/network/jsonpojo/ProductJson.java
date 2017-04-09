@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Lin Weizhi (ecc.weizhi@gmail.com)
@@ -23,4 +24,6 @@ public class ProductJson {
     @JsonProperty("pricing") public PricingJson pricing;
     @JsonProperty("description_fields") public DescriptionFieldJson descriptionField;
     @JsonProperty("promotions") public List<PromotionJson> promotions;
+    @JsonProperty("details") public DetailsJson details;
+    @JsonProperty("labels") public Set<String> labels;
 }
