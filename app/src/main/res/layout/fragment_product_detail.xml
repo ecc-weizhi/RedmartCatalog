@@ -8,11 +8,12 @@
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/margin_huge">
 
-        <LinearLayout
+        <LinearLayout android:id="@+id/product_detail_content_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <android.support.constraint.ConstraintLayout android:id="@+id/top_layout"
@@ -29,12 +30,19 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent" />
 
-                <me.relex.circleindicator.CircleIndicator android:id="@+id/image_pager_indicator"
-                    android:layout_width="wrap_content"
+                <com.viewpagerindicator.CirclePageIndicator android:id="@+id/image_pager_indicator"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_normal"
+                    android:padding="@dimen/margin_small"
                     app:layout_constraintTop_toBottomOf="@id/product_image_pager"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"/>
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:pageColor="@color/windowBackground"
+                    app:strokeColor="@color/windowBackground"
+                    app:strokeWidth="0dp"
+                    app:radius="4dp"
+                    app:fillColor="@color/colorPrimary"/>
 
                 <TextView android:id="@+id/product_title_text"
                     android:layout_width="0dp"
@@ -42,34 +50,75 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/image_pager_indicator"
                     app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginLeft="@dimen/margin_large"
+                    android:layout_marginRight="@dimen/margin_large"
                     android:layout_marginTop="@dimen/margin_normal"
-                    android:text="NESTLE CHEERIOS Oat Crisp Cereal With Whole Grain 400G"/>
+                    android:textSize="@dimen/font_size_huge"
+                    android:textColor="@color/black_87"
+                    tools:text="NESTLE CHEERIOS Oat Crisp Cereal With Whole Grain 400G"/>
 
-                <TextView android:id="@+id/product_expiry_text"
-                    android:layout_width="wrap_content"
+                <LinearLayout android:id="@+id/below_title_label_layout"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/product_title_text"
-                    android:background="@drawable/rectangle_right_round_24dp"
-                    android:text="Expires in 1 month or more from delivery"/>
+                    app:layout_constraintRight_toRightOf="parent">
+
+                    <TextView android:id="@+id/product_expiry_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/font_size_normal"
+                        android:textColor="@color/white_100"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:paddingLeft="@dimen/margin_large"
+                        android:paddingTop="@dimen/margin_small"
+                        android:paddingRight="@dimen/margin_large"
+                        android:paddingBottom="@dimen/margin_small"
+                        android:background="@drawable/rectangle_right_round_24dp"
+                        tools:text="@string/expiry_minimum_days"/>
+
+                    <TextView android:id="@+id/product_frozen_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/font_size_normal"
+                        android:textColor="@color/white_100"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:paddingLeft="@dimen/margin_large"
+                        android:paddingTop="@dimen/margin_small"
+                        android:paddingRight="@dimen/margin_large"
+                        android:paddingBottom="@dimen/margin_small"
+                        android:background="@drawable/rectangle_right_round_24dp"
+                        android:text="@string/label_frozen"/>
+
+                </LinearLayout>
 
                 <TextView android:id="@+id/product_wt_vol_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_large"
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:textSize="@dimen/font_size_normal"
+                    android:textColor="@color/black_38"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/product_expiry_text"
-                    android:text="200 g"/>
+                    app:layout_constraintTop_toBottomOf="@id/below_title_label_layout"
+                    tools:text="200 g"/>
 
                 <TextView android:id="@+id/product_price_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textSize="@dimen/font_size_humongous"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="@dimen/margin_large"
+                    android:layout_marginTop="@dimen/margin_normal"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/product_wt_vol_text"
-                    android:text="$8.55"/>
+                    tools:text="$8.55"/>
 
                 <Button android:id="@+id/product_save_to_list_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_normal"
+                    android:layout_marginTop="@dimen/margin_normal"
                     style="@style/Widget.AppCompat.Button.Borderless"
                     android:text="@string/save_to_list"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -77,40 +126,35 @@
 
             </android.support.constraint.ConstraintLayout>
 
-            <android.support.constraint.ConstraintLayout android:id="@+id/product_about_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white_100"
-                android:layout_marginBottom="@dimen/margin_tiny">
-
-                <TextView android:id="@+id/product_about_text"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    android:text="Hello world"/>
-
-            </android.support.constraint.ConstraintLayout>
-
-            <android.support.constraint.ConstraintLayout android:id="@+id/product_storage_layout"
-                android:layout_width="match_parent"
-                android:layout_height="400dp"
-                android:background="@color/white_100">
-                
-            </android.support.constraint.ConstraintLayout>
-
         </LinearLayout>
 
-        <android.support.design.widget.FloatingActionButton android:id="@+id/fab"
+        <android.support.constraint.ConstraintLayout android:id="@+id/floating_button_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:clickable="true"
-            android:src="@drawable/common_ic_googleplayservices"
+            android:padding="@dimen/margin_large"
+            android:background="@drawable/rectangle_round_corner_36dp"
             app:layout_anchor="@id/top_layout"
             app:layout_anchorGravity="bottom|right|end"
-            android:visibility="gone"/>
+            android:elevation="6dp"
+            android:layout_marginRight="@dimen/margin_huge"
+            android:visibility="gone">
+
+            <TextView android:id="@+id/add_to_cart_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_normal"
+                android:layout_marginRight="@dimen/margin_normal"
+                android:textSize="@dimen/font_size_normal"
+                android:textStyle="bold"
+                android:textColor="@color/white_100"
+                android:textAllCaps="true"
+                android:text="@string/add_to_cart"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </android.support.constraint.ConstraintLayout>
 
     </android.support.design.widget.CoordinatorLayout>
 

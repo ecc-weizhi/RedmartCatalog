@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/margin_small"
+    app:cardElevation="1dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:cardBackgroundColor="@color/white_100">
+
+    <LinearLayout android:id="@+id/description_content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/margin_large">
+
+        <TextView android:id="@+id/description_name_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_normal"
+            android:textSize="@dimen/font_size_normal"
+            android:textColor="@color/black_38"
+            tools:text="About the product"/>
+
+        <TextView android:id="@+id/description_content_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_size_normal"
+            android:textColor="@color/black_87"
+            tools:text="Recommended to store at chilled temperature:1-3 degrees is highly perishable and should be transferred to cool storage immediately. Reduce stocking and practice good stock rotation to maintain freshness. Prolonged storage is not recommended."/>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

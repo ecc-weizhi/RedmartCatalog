@@ -20,6 +20,22 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
 
+        <TextView android:id="@+id/product_image_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@id/product_image"
+            app:layout_constraintBottom_toBottomOf="@id/product_image"
+            android:layout_marginLeft="@dimen/margin_normal"
+            android:maxLines="1"
+            android:minLines="1"
+            android:background="@drawable/rectangle_round_corner_3dp"
+            android:textSize="@dimen/font_size_tiny"
+            android:textStyle="bold"
+            android:textColor="@color/white_100"
+            android:padding="@dimen/margin_tiny"
+            android:textAllCaps="true"
+            android:text="Buy 2 save 15%"/>
+
         <TextView android:id="@+id/product_title_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

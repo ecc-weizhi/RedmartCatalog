@@ -2,11 +2,13 @@ package com.weizhi.redmartcatalog.model;
 
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
+
 /**
  * @author Lin Weizhi (ecc.weizhi@gmail.com)
  */
 
-public class ProductImage {
+public class ProductImage implements Serializable{
     public final int height;
     public final int width;
     public final String path;

@@ -65,6 +65,38 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.ViewHold
                 .fitCenter()
                 .into(holder.productImage);
 
+        // image label
+        switch(product.getPromotionType()){
+            case 1:
+                if(!TextUtils.isEmpty(product.getSavingText())){
+                    int redColor = ContextCompat.getColor(holder.productImageLabel.getContext(),
+                            R.color.colorPrimary);
+                    ((GradientDrawable)holder.productImageLabel.getBackground()).setColor(redColor);
+                    holder.productImageLabel.setText(product.getSavingText());
+                    holder.productImageLabel.setVisibility(View.VISIBLE);
+                }
+                else{
+                    holder.productImageLabel.setVisibility(View.GONE);
+                }
+                break;
+
+            case 3:
+                if(!TextUtils.isEmpty(product.getSavingText())){
+                    int blueColor = ContextCompat.getColor(holder.productImageLabel.getContext(),
+                            R.color.label_blue);
+                    ((GradientDrawable)holder.productImageLabel.getBackground()).setColor(blueColor);
+                    holder.productImageLabel.setText(product.getSavingText());
+                    holder.productImageLabel.setVisibility(View.VISIBLE);
+                }
+                else{
+                    holder.productImageLabel.setVisibility(View.GONE);
+                }
+                break;
+
+            default:
+                holder.productImageLabel.setVisibility(View.GONE);
+        }
+
         // title
         holder.titleText.setText(product.getTitle());
 
@@ -79,13 +111,18 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.ViewHold
         }
 
         // expiry
-        String expiry = product.getExpiry();
-        if(expiry == null){
-            holder.expiryText.setVisibility(View.GONE);
+        if(product.getExpiryTime() != 0){
+            StringBuilder sb = new StringBuilder();
+            sb.append(product.getExpiryTime()).append(product.getExpiryMetric());
+            if(product.isExpiryMinimum()){
+                sb.append("+");
+            }
+
+            holder.expiryText.setVisibility(View.VISIBLE);
+            holder.expiryText.setText(sb.toString());
         }
         else{
-            holder.expiryText.setVisibility(View.VISIBLE);
-            holder.expiryText.setText(expiry);
+            holder.expiryText.setVisibility(View.GONE);
         }
 
         // frozen
@@ -191,6 +228,7 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.ViewHold
         public TextView priceText;
         public View dividerView;
         public Button addButton;
+        public TextView productImageLabel;
         private CatalogClickListener mListener;
 
         public ViewHolder(View v, CatalogClickListener listener){
@@ -205,6 +243,7 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.ViewHold
             priceText = (TextView) v.findViewById(R.id.product_price_text);
             dividerView = v.findViewById(R.id.divider);
             addButton = (Button) v.findViewById(R.id.product_add_button);
+            productImageLabel = (TextView) v.findViewById(R.id.product_image_label);
 
             // expiry label
             int expiryLabelColor = ContextCompat.getColor(expiryText.getContext(),

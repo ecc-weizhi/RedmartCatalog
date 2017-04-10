@@ -3,13 +3,13 @@ package com.weizhi.redmartcatalog.model;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import java.util.List;
+import java.io.Serializable;
 
 /**
  * @author Lin Weizhi (ecc.weizhi@gmail.com)
  */
 
-public class Product {
+public class Product implements Serializable{
     private final long mId;
     private final String mTitle;
     private final String mDescription;
@@ -23,6 +23,9 @@ public class Product {
     private final ProductImage mMainImage;
     private final ProductImage[] mImages;
     private final boolean mIsFrozen;
+    private final ProductDescriptionField[] mSecondaryDescriptionField;
+    private final int mPromotionType;
+    private final String mSavingText;
 
     public Product(long id,
                    @NonNull String title,
@@ -36,7 +39,10 @@ public class Product {
                    boolean isExpiryMinimum,
                    @NonNull ProductImage mainImage,
                    @NonNull ProductImage[] images,
-                   boolean isFrozen) {
+                   boolean isFrozen,
+                   @NonNull ProductDescriptionField[] secondaryDescriptionField,
+                   int promotionType,
+                   @Nullable String savingText) {
         mId = id;
         mTitle = title;
         mDescription = description;
@@ -50,6 +56,9 @@ public class Product {
         mMainImage = mainImage;
         mImages = images;
         mIsFrozen = isFrozen;
+        mSecondaryDescriptionField = secondaryDescriptionField;
+        mPromotionType = promotionType;
+        mSavingText = savingText;
     }
 
     public long getId(){
@@ -83,18 +92,17 @@ public class Product {
         return mWtVol;
     }
 
-    @Nullable
-    public String getExpiry(){
-        if(mExpiryTime == 0){
-            return null;
-        }
+    public int getExpiryTime(){
+        return mExpiryTime;
+    }
 
-        StringBuilder sb = new StringBuilder();
-        sb.append(mExpiryTime).append(mExpiryMetric);
-        if(mIsExpiryMinimum){
-            sb.append("+");
-        }
-        return sb.toString();
+    @Nullable
+    public String getExpiryMetric(){
+        return mExpiryMetric;
+    }
+
+    public boolean isExpiryMinimum(){
+        return mIsExpiryMinimum;
     }
 
     @NonNull
@@ -102,7 +110,26 @@ public class Product {
         return mMainImage;
     }
 
+    @NonNull
+    public ProductImage[] getImages(){
+        return mImages;
+    }
+
     public boolean isFrozen(){
         return mIsFrozen;
+    }
+
+    @NonNull
+    public ProductDescriptionField[] getSecondaryDescriptionField(){
+        return mSecondaryDescriptionField;
+    }
+
+    public int getPromotionType(){
+        return mPromotionType;
+    }
+
+    @Nullable
+    public String getSavingText(){
+        return mSavingText;
     }
 }

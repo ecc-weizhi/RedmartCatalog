@@ -5,4 +5,8 @@
     <string name="emoji_snow">\u2744</string>
     <string name="add_to_cart">Add to cart</string>
     <string name="save_to_list">Save to list</string>
+    <string name="expiry_minimum_days">Guaranteed fresh for %1$d+ days, inc. delivery day</string>
+    <string name="expiry_minimum_months">Expires in $1%d month or more from delivery</string>
+    <string name="label_frozen">Frozen</string>
+    <string name="description_name">About the product</string>
 </resources>

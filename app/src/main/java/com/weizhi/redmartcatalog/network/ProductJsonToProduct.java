@@ -3,7 +3,9 @@ package com.weizhi.redmartcatalog.network;
 import android.support.annotation.NonNull;
 
 import com.weizhi.redmartcatalog.model.Product;
+import com.weizhi.redmartcatalog.model.ProductDescriptionField;
 import com.weizhi.redmartcatalog.model.ProductImage;
+import com.weizhi.redmartcatalog.network.jsonpojo.DescriptionSecondaryJson;
 import com.weizhi.redmartcatalog.network.jsonpojo.ImageJson;
 import com.weizhi.redmartcatalog.network.jsonpojo.ProductJson;
 
@@ -20,10 +22,29 @@ public class ProductJsonToProduct implements Deserializer<ProductJson, Product> 
                 from.img.name,
                 from.img.position);
 
-        ProductImage[] images = new ProductImage[from.images.size()];
+        ProductImage[] images = new ProductImage[from.images == null ? 0 : from.images.size()];
         for(int i=0; i<from.images.size(); i++){
             ImageJson json = from.images.get(i);
             images[i] = new ProductImage(json.h, json.w, json.name, json.position);
+        }
+
+        int size = 0;
+        if(from.descriptionField != null && from.descriptionField.secondaryList != null){
+            size = from.descriptionField.secondaryList.size();
+        }
+        ProductDescriptionField[] secondaryDescriptions = new ProductDescriptionField[size];
+        for(int i=0; i<secondaryDescriptions.length; i++){
+            DescriptionSecondaryJson secondary = from.descriptionField.secondaryList.get(i);
+            ProductDescriptionField description = new ProductDescriptionField(
+                    secondary.name, secondary.content);
+            secondaryDescriptions[i] = description;
+        }
+
+        int promotionType = 0;
+        String savingText = null;
+        if(from.promotions != null && from.promotions.size() > 0){
+            promotionType = from.promotions.get(0).type;
+            savingText = from.promotions.get(0).savingsText;
         }
 
         double price = from.pricing == null ? 0 : from.pricing.price;
@@ -47,6 +68,9 @@ public class ProductJsonToProduct implements Deserializer<ProductJson, Product> 
                 isExpiryMinimum,
                 mainImage,
                 images,
-                isFrozen);
+                isFrozen,
+                secondaryDescriptions,
+                promotionType,
+                savingText);
     }
 }
