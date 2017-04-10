@@ -9,4 +9,7 @@
     <string name="expiry_minimum_months">Expires in $1%d month or more from delivery</string>
     <string name="label_frozen">Frozen</string>
     <string name="description_name">About the product</string>
+    <string name="catalog_screen_title">RedMart Catalog</string>
+    <string name="notification_added_to_cart">Product added to cart</string>
+    <string name="notification_saved_to_list">Product saved to list</string>
 </resources>

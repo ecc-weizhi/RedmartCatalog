@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:scrollbars="none">
 
-    <android.support.design.widget.CoordinatorLayout
+    <android.support.design.widget.CoordinatorLayout android:id="@+id/product_detail_coordinator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/margin_huge">
@@ -44,6 +44,24 @@
                     app:radius="4dp"
                     app:fillColor="@color/colorPrimary"/>
 
+                <TextView android:id="@+id/product_image_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/font_size_small"
+                    android:textColor="@color/white_100"
+                    android:paddingLeft="@dimen/margin_small"
+                    android:paddingTop="@dimen/margin_small"
+                    android:paddingRight="@dimen/margin_small"
+                    android:paddingBottom="@dimen/margin_small"
+                    android:background="@drawable/rectangle_round_corner_3dp"
+                    android:textStyle="bold"
+                    android:textAllCaps="true"
+                    tools:text="@string/expiry_minimum_days"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@id/image_pager_indicator"
+                    android:visibility="gone"
+                    tools:visibility="visible"/>
+
                 <TextView android:id="@+id/product_title_text"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -75,6 +93,8 @@
                         android:paddingRight="@dimen/margin_large"
                         android:paddingBottom="@dimen/margin_small"
                         android:background="@drawable/rectangle_right_round_24dp"
+                        android:visibility="gone"
+                        tools:visibility="visible"
                         tools:text="@string/expiry_minimum_days"/>
 
                     <TextView android:id="@+id/product_frozen_text"
@@ -88,7 +108,9 @@
                         android:paddingRight="@dimen/margin_large"
                         android:paddingBottom="@dimen/margin_small"
                         android:background="@drawable/rectangle_right_round_24dp"
-                        android:text="@string/label_frozen"/>
+                        android:text="@string/label_frozen"
+                        android:visibility="gone"
+                        tools:visibility="visible"/>
 
                 </LinearLayout>
 

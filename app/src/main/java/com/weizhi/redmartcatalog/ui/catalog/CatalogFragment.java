@@ -1,9 +1,12 @@
 package com.weizhi.redmartcatalog.ui.catalog;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -107,13 +110,12 @@ public class CatalogFragment extends Fragment implements
 
     @Override
     public void onProductClick(@NonNull Product product) {
-        mRootView.setVisibility(View.GONE);
-        mParent.goToDetail(product);
+        mPresenter.onProductClick(product);
     }
 
     @Override
     public void onAddToCartClick(@NonNull Product product) {
-        Toast.makeText(getActivity(), product.getTitle() + " add to cart", Toast.LENGTH_SHORT).show();
+        mPresenter.onAddToCartClick(product);
     }
 
     @Override
@@ -121,11 +123,29 @@ public class CatalogFragment extends Fragment implements
         mAdapter.updateDataSet(page, productList);
     }
 
+    @Override
+    public void showAddedToCart(@NonNull Product product) {
+        Snackbar sb = Snackbar.make(mRootView, R.string.notification_added_to_cart, Snackbar.LENGTH_SHORT);
+        sb.getView().setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark));
+        sb.setActionTextColor(Color.WHITE);
+        sb.show();
+    }
+
+    @Override
+    public void showGoToProductDetail(@NonNull Product product) {
+        mRootView.setVisibility(View.GONE);
+        mParent.goToDetail(product);
+    }
+
     public void showCatalogScreen(boolean shouldShow){
         mRootView.setVisibility(shouldShow ? View.VISIBLE : View.GONE);
+        if(shouldShow){
+            mParent.showTitle(getString(R.string.catalog_screen_title));
+        }
     }
 
     public interface OnFragmentInteractionListener{
         void goToDetail(@NonNull Product product);
+        void showTitle(@NonNull String title);
     }
 }

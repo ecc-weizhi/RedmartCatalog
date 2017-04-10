@@ -19,7 +19,8 @@ import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity implements
         CatalogFragment.OnFragmentInteractionListener,
-        FragmentManager.OnBackStackChangedListener{
+        FragmentManager.OnBackStackChangedListener,
+        ProductDetailFragment.OnFragmentInteractionListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.catalog_screen_title);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.addOnBackStackChangedListener(this);
@@ -37,25 +39,14 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_catalog, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -70,6 +61,11 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void showTitle(@NonNull String title) {
+        getSupportActionBar().setTitle(title);
+    }
+
+    @Override
     public void onBackStackChanged() {
         FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -77,7 +73,11 @@ public class MainActivity extends AppCompatActivity implements
             Fragment fragment = fragmentManager.findFragmentById(R.id.fragment);
             if(fragment instanceof CatalogFragment){
                 ((CatalogFragment) fragment).showCatalogScreen(true);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             }
+        }
+        else{
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
 }

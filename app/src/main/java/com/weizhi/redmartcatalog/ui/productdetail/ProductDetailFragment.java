@@ -1,10 +1,13 @@
 package com.weizhi.redmartcatalog.ui.productdetail;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -21,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.viewpagerindicator.CirclePageIndicator;
 import com.weizhi.redmartcatalog.R;
@@ -31,10 +35,14 @@ import com.weizhi.redmartcatalog.model.ProductDescriptionField;
  * @author Lin Weizhi (ecc.weizhi@gmail.com)
  */
 
-public class ProductDetailFragment extends Fragment {
+public class ProductDetailFragment extends Fragment implements
+        View.OnClickListener,
+        ProductDetailContract.View{
     private static final String ARGS_PRODUCT = "args_product";
     private static final float OLD_PRICE_PROPORTION = 0.6f;
 
+    private View mRootView;
+    private CoordinatorLayout mCoordinatorLayout;
     private LinearLayout mProductDetailLayout;
     private ConstraintLayout mTopLayout;
     private ConstraintLayout mFloatingButtonLayout;
@@ -47,7 +55,10 @@ public class ProductDetailFragment extends Fragment {
     private TextView mWtVolText;
     private TextView mPriceText;
     private Button mSaveToListButton;
+    private TextView mImageLabel;
 
+    private OnFragmentInteractionListener mParent;
+    private ProductDetailContract.ActionListener mPresenter;
     private Product mProduct;
     private ImagePagerAdapter mAdapter;
 
@@ -65,33 +76,82 @@ public class ProductDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        mPresenter = new ProductDetailPresenter(this);
         mProduct = (Product)getArguments().getSerializable(ARGS_PRODUCT);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mParent = (OnFragmentInteractionListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_product_detail, container, false);
-        mProductDetailLayout = (LinearLayout)v.findViewById(R.id.product_detail_content_layout);
-        mTopLayout = (ConstraintLayout)v.findViewById(R.id.top_layout);
-        mFloatingButtonLayout = (ConstraintLayout)v.findViewById(R.id.floating_button_layout);
-        mAddToCartText = (TextView)v.findViewById(R.id.add_to_cart_text);
-        mImagePager = (ViewPager)v.findViewById(R.id.product_image_pager);
-        mPagerIndicator = (CirclePageIndicator)v.findViewById(R.id.image_pager_indicator);
-        mTitleText = (TextView)v.findViewById(R.id.product_title_text);
-        mExpiryText = (TextView)v.findViewById(R.id.product_expiry_text);
-        mFrozenText = (TextView)v.findViewById(R.id.product_frozen_text);
-        mWtVolText = (TextView)v.findViewById(R.id.product_wt_vol_text);
-        mPriceText = (TextView)v.findViewById(R.id.product_price_text);
-        mSaveToListButton = (Button)v.findViewById(R.id.product_save_to_list_button);
+        mRootView = inflater.inflate(R.layout.fragment_product_detail, container, false);
+        mCoordinatorLayout = (CoordinatorLayout)mRootView.findViewById(R.id.product_detail_coordinator);
+        mProductDetailLayout = (LinearLayout)mRootView.findViewById(R.id.product_detail_content_layout);
+        mTopLayout = (ConstraintLayout)mRootView.findViewById(R.id.top_layout);
+        mFloatingButtonLayout = (ConstraintLayout)mRootView.findViewById(R.id.floating_button_layout);
+        mAddToCartText = (TextView)mRootView.findViewById(R.id.add_to_cart_text);
+        mImagePager = (ViewPager)mRootView.findViewById(R.id.product_image_pager);
+        mPagerIndicator = (CirclePageIndicator)mRootView.findViewById(R.id.image_pager_indicator);
+        mTitleText = (TextView)mRootView.findViewById(R.id.product_title_text);
+        mExpiryText = (TextView)mRootView.findViewById(R.id.product_expiry_text);
+        mFrozenText = (TextView)mRootView.findViewById(R.id.product_frozen_text);
+        mWtVolText = (TextView)mRootView.findViewById(R.id.product_wt_vol_text);
+        mPriceText = (TextView)mRootView.findViewById(R.id.product_price_text);
+        mSaveToListButton = (Button)mRootView.findViewById(R.id.product_save_to_list_button);
+        mImageLabel = (TextView)mRootView.findViewById(R.id.product_image_label);
 
         issue221387Workaround(mFloatingButtonLayout);
+
+        mFloatingButtonLayout.setOnClickListener(this);
+        mSaveToListButton.setOnClickListener(this);
 
         // images
         mAdapter = new ImagePagerAdapter(this);
         mAdapter.updateDataSet(mProduct.getImages());
         mImagePager.setAdapter(mAdapter);
         mPagerIndicator.setViewPager(mImagePager);
+
+        // image label
+        switch(mProduct.getPromotionType()){
+            case 1:
+                if(!TextUtils.isEmpty(mProduct.getSavingText())){
+                    int redColor = ContextCompat.getColor(mImageLabel.getContext(),
+                            R.color.colorPrimary);
+                    ((GradientDrawable)mImageLabel.getBackground()).setColor(redColor);
+                    mImageLabel.setText(mProduct.getSavingText());
+                    mImageLabel.setVisibility(View.VISIBLE);
+                }
+                else{
+                    mImageLabel.setVisibility(View.GONE);
+                }
+                break;
+
+            case 3:
+                if(!TextUtils.isEmpty(mProduct.getSavingText())){
+                    int blueColor = ContextCompat.getColor(mImageLabel.getContext(),
+                            R.color.label_blue);
+                    ((GradientDrawable)mImageLabel.getBackground()).setColor(blueColor);
+                    mImageLabel.setText(mProduct.getSavingText());
+                    mImageLabel.setVisibility(View.VISIBLE);
+                }
+                else{
+                    mImageLabel.setVisibility(View.GONE);
+                }
+                break;
+
+            default:
+                mImageLabel.setVisibility(View.GONE);
+        }
 
         // title
         mTitleText.setText(mProduct.getTitle());
@@ -209,13 +269,14 @@ public class ProductDetailFragment extends Fragment {
             }
         }
 
-        return v;
+        return mRootView;
     }
 
 
     @Override
     public void onStart(){
         super.onStart();
+        mParent.showTitle(mProduct.getTitle());
     }
 
     @Override
@@ -236,5 +297,38 @@ public class ProductDetailFragment extends Fragment {
                 viewToBeAnchor.setVisibility(View.VISIBLE);
             }
         });
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()){
+            case R.id.product_save_to_list_button:
+                mPresenter.onSaveToListClick(mProduct);
+                break;
+
+            case R.id.floating_button_layout:
+                mPresenter.onAddToCartClick(mProduct);
+                break;
+        }
+    }
+
+    @Override
+    public void showAddedToCart(@NonNull Product product) {
+        Snackbar sb = Snackbar.make(mRootView, R.string.notification_added_to_cart, Snackbar.LENGTH_SHORT);
+        sb.getView().setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark));
+        sb.setActionTextColor(Color.WHITE);
+        sb.show();
+    }
+
+    @Override
+    public void showSavedToList(@NonNull Product product) {
+        Snackbar sb = Snackbar.make(mRootView, R.string.notification_saved_to_list, Snackbar.LENGTH_SHORT);
+        sb.getView().setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark));
+        sb.setActionTextColor(Color.WHITE);
+        sb.show();
+    }
+
+    public interface OnFragmentInteractionListener{
+        void showTitle(@NonNull String title);
     }
 }
