@@ -2,28 +2,22 @@ package com.weizhi.redmartcatalog.ui.catalog;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.weizhi.redmartcatalog.MyApplication;
 import com.weizhi.redmartcatalog.R;
-import com.weizhi.redmartcatalog.common.Helper;
 import com.weizhi.redmartcatalog.model.Product;
-import com.weizhi.redmartcatalog.model.ProductImage;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import timber.log.Timber;
 
 /**
  * @author Lin Weizhi (ecc.weizhi@gmail.com)
@@ -41,8 +35,7 @@ public class CatalogFragment extends Fragment implements
 
 
     public static CatalogFragment newInstance(){
-        CatalogFragment fragment = new CatalogFragment();
-        return fragment;
+        return new CatalogFragment();
     }
 
     public CatalogFragment() {
@@ -92,7 +85,7 @@ public class CatalogFragment extends Fragment implements
         super.onStart();
         mPresenter.onStart();
         if(mAdapter.getItemCount() == 0){
-            fetchCatalog(0, mAdapter.PAGE_SIZE);
+            fetchCatalog(0, CatalogAdapter.PAGE_SIZE);
         }
     }
 

@@ -9,15 +9,31 @@ import java.io.Serializable;
  */
 
 public class ProductImage implements Serializable{
-    public final int height;
-    public final int width;
-    public final String path;
-    public final int position;
+    private final int mHeight;
+    private final int mWidth;
+    private final String mPath;
+    private final int mPosition;
 
     public ProductImage(int height, int width, @NonNull String path, int position) {
-        this.height = height;
-        this.width = width;
-        this.path = path;
-        this.position = position;
+        mHeight = height;
+        mWidth = width;
+        mPath = path;
+        mPosition = position;
+    }
+
+    public int getHeight() {
+        return mHeight;
+    }
+
+    public int getWidth() {
+        return mWidth;
+    }
+
+    public String getPath() {
+        return mPath;
+    }
+
+    public int getPosition() {
+        return mPosition;
     }
 }

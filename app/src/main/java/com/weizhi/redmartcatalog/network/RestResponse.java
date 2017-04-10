@@ -11,9 +11,9 @@ public class RestResponse<T> {
     public final Integer httpStatusCode;
     public final Throwable error;
 
-    public RestResponse(@Nullable T payload,
-                        @Nullable Integer httpStatusCode,
-                        @Nullable Throwable error){
+    RestResponse(@Nullable T payload,
+                 @Nullable Integer httpStatusCode,
+                 @Nullable Throwable error){
         this.payload = payload;
         this.httpStatusCode = httpStatusCode;
         this.error = error;

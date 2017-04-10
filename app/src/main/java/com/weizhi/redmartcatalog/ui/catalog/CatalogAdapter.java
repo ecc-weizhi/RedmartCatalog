@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.weizhi.redmartcatalog.R;
@@ -25,6 +24,7 @@ import com.weizhi.redmartcatalog.network.WsConstants;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * @author Lin Weizhi (ecc.weizhi@gmail.com)
@@ -61,7 +61,7 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.ViewHold
 
         // image
         Glide.with(mFragment)
-                .load(WsConstants.IMAGE_BASE_URL+product.getMainImage().path)
+                .load(WsConstants.IMAGE_BASE_URL+product.getMainImage().getPath())
                 .fitCenter()
                 .into(holder.productImage);
 
@@ -130,7 +130,8 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.ViewHold
 
         // price
         if(product.isOnSale()){
-            Spannable promoPrice = new SpannableString(String.format("$%.2f ", product.getPromoPrice()));
+            Spannable promoPrice = new SpannableString(String.format(Locale.US,
+                    "$%.2f ", product.getPromoPrice()));
             int promoColor = ContextCompat.getColor(holder.priceText.getContext(),
                     R.color.price_promo);
             promoPrice.setSpan(new ForegroundColorSpan(promoColor),
@@ -138,7 +139,8 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.ViewHold
                     promoPrice.length(),
                     Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
 
-            Spannable oldPrice = new SpannableString(String.format("$%.2f", product.getPrice()));
+            Spannable oldPrice = new SpannableString(String.format(Locale.US,
+                    "$%.2f", product.getPrice()));
             int oldColor = ContextCompat.getColor(holder.priceText.getContext(),
                     R.color.price_old);
             oldPrice.setSpan(new ForegroundColorSpan(oldColor),
@@ -152,7 +154,8 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.ViewHold
             holder.priceText.setText(TextUtils.concat(promoPrice, oldPrice));
         }
         else{
-            Spannable price = new SpannableString(String.format("$%.2f", product.getPrice()));
+            Spannable price = new SpannableString(String.format(Locale.US,
+                    "$%.2f", product.getPrice()));
 
             int priceColor = ContextCompat.getColor(holder.priceText.getContext(),
                     R.color.price_normal);
@@ -217,21 +220,21 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.ViewHold
         mIsLoadingMore = isLoadingMore;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder implements
+    static class ViewHolder extends RecyclerView.ViewHolder implements
             View.OnClickListener{
-        public View mainView;
-        public ImageView productImage;
-        public TextView titleText;
-        public TextView wtVolText;
-        public TextView expiryText;
-        public TextView frozenText;
-        public TextView priceText;
-        public View dividerView;
-        public Button addButton;
-        public TextView productImageLabel;
+        View mainView;
+        ImageView productImage;
+        TextView titleText;
+        TextView wtVolText;
+        TextView expiryText;
+        TextView frozenText;
+        TextView priceText;
+        View dividerView;
+        Button addButton;
+        TextView productImageLabel;
         private CatalogClickListener mListener;
 
-        public ViewHolder(View v, CatalogClickListener listener){
+        ViewHolder(View v, CatalogClickListener listener){
             super(v);
             mainView = v;
             mListener = listener;

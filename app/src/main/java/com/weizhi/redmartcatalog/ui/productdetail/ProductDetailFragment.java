@@ -6,7 +6,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -24,12 +23,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.viewpagerindicator.CirclePageIndicator;
 import com.weizhi.redmartcatalog.R;
 import com.weizhi.redmartcatalog.model.Product;
 import com.weizhi.redmartcatalog.model.ProductDescriptionField;
+
+import java.util.Locale;
 
 /**
  * @author Lin Weizhi (ecc.weizhi@gmail.com)
@@ -42,7 +42,6 @@ public class ProductDetailFragment extends Fragment implements
     private static final float OLD_PRICE_PROPORTION = 0.6f;
 
     private View mRootView;
-    private CoordinatorLayout mCoordinatorLayout;
     private LinearLayout mProductDetailLayout;
     private ConstraintLayout mTopLayout;
     private ConstraintLayout mFloatingButtonLayout;
@@ -95,7 +94,6 @@ public class ProductDetailFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_product_detail, container, false);
-        mCoordinatorLayout = (CoordinatorLayout)mRootView.findViewById(R.id.product_detail_coordinator);
         mProductDetailLayout = (LinearLayout)mRootView.findViewById(R.id.product_detail_content_layout);
         mTopLayout = (ConstraintLayout)mRootView.findViewById(R.id.top_layout);
         mFloatingButtonLayout = (ConstraintLayout)mRootView.findViewById(R.id.floating_button_layout);
@@ -162,20 +160,25 @@ public class ProductDetailFragment extends Fragment implements
             int expiryLabelColor = ContextCompat.getColor(getActivity(), R.color.label_green);
             ((GradientDrawable)mExpiryText.getBackground()).setColor(expiryLabelColor);
 
-            switch(metric){
-                case "D":
-                    mExpiryText.setText(getString(R.string.expiry_minimum_days, mProduct.getExpiryTime()));
-                    mExpiryText.setVisibility(View.VISIBLE);
-                    break;
+            if(metric != null){
+                switch(metric){
+                    case "D":
+                        mExpiryText.setText(getString(R.string.expiry_minimum_days, mProduct.getExpiryTime()));
+                        mExpiryText.setVisibility(View.VISIBLE);
+                        break;
 
-                case "M":
-                    mExpiryText.setText(getString(R.string.expiry_minimum_months, mProduct.getExpiryTime()));
-                    mExpiryText.setVisibility(View.VISIBLE);
-                    break;
+                    case "M":
+                        mExpiryText.setText(getString(R.string.expiry_minimum_months, mProduct.getExpiryTime()));
+                        mExpiryText.setVisibility(View.VISIBLE);
+                        break;
 
-                default:
-                    mExpiryText.setVisibility(View.GONE);
-                    break;
+                    default:
+                        mExpiryText.setVisibility(View.GONE);
+                        break;
+                }
+            }
+            else{
+                mExpiryText.setVisibility(View.GONE);
             }
         }
         else{
@@ -203,14 +206,16 @@ public class ProductDetailFragment extends Fragment implements
 
         // price
         if(mProduct.isOnSale()){
-            Spannable promoPrice = new SpannableString(String.format("$%.2f ", mProduct.getPromoPrice()));
+            Spannable promoPrice = new SpannableString(String.format(Locale.US,
+                    "$%.2f ", mProduct.getPromoPrice()));
             int promoColor = ContextCompat.getColor(mPriceText.getContext(), R.color.price_promo);
             promoPrice.setSpan(new ForegroundColorSpan(promoColor),
                     0,
                     promoPrice.length(),
                     Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
 
-            Spannable oldPrice = new SpannableString(String.format("$%.2f", mProduct.getPrice()));
+            Spannable oldPrice = new SpannableString(String.format(Locale.US,
+                    "$%.2f", mProduct.getPrice()));
             int oldColor = ContextCompat.getColor(mPriceText.getContext(),
                     R.color.price_old);
             oldPrice.setSpan(new ForegroundColorSpan(oldColor),
@@ -228,7 +233,8 @@ public class ProductDetailFragment extends Fragment implements
             mPriceText.setText(TextUtils.concat(promoPrice, oldPrice));
         }
         else{
-            Spannable price = new SpannableString(String.format("$%.2f", mProduct.getPrice()));
+            Spannable price = new SpannableString(String.format(Locale.US,
+                    "$%.2f", mProduct.getPrice()));
 
             int priceColor = ContextCompat.getColor(mPriceText.getContext(),
                     R.color.price_normal);

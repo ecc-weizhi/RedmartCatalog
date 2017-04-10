@@ -13,7 +13,7 @@ import com.weizhi.redmartcatalog.network.jsonpojo.ProductJson;
  * @author Lin Weizhi (ecc.weizhi@gmail.com)
  */
 
-public class ProductJsonToProduct implements Deserializer<ProductJson, Product> {
+class ProductJsonToProduct implements Deserializer<ProductJson, Product> {
     @NonNull
     @Override
     public Product deserializeFrom(@NonNull ProductJson from) {
@@ -23,7 +23,7 @@ public class ProductJsonToProduct implements Deserializer<ProductJson, Product> 
                 from.img.position);
 
         ProductImage[] images = new ProductImage[from.images == null ? 0 : from.images.size()];
-        for(int i=0; i<from.images.size(); i++){
+        for(int i=0; i<images.length; i++){
             ImageJson json = from.images.get(i);
             images[i] = new ProductImage(json.h, json.w, json.name, json.position);
         }

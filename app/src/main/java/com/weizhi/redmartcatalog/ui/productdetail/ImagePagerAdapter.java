@@ -38,7 +38,7 @@ public class ImagePagerAdapter extends PagerAdapter {
                 .inflate(R.layout.view_product_image_item, collection, false);
 
         Glide.with(mFragment)
-                .load(WsConstants.IMAGE_BASE_URL+image.path)
+                .load(WsConstants.IMAGE_BASE_URL+image.getPath())
                 .fitCenter()
                 .into(imageView);
 

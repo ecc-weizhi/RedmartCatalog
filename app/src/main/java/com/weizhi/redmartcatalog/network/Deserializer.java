@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
  * @author Lin Weizhi (ecc.weizhi@gmail.com)
  */
 
-public interface Deserializer<F, T> {
+interface Deserializer<F, T> {
     @NonNull
     T deserializeFrom(@NonNull F from);
 }

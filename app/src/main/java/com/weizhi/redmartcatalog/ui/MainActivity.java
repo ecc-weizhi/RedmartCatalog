@@ -5,17 +5,15 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import com.weizhi.redmartcatalog.R;
 import com.weizhi.redmartcatalog.model.Product;
 import com.weizhi.redmartcatalog.ui.catalog.CatalogFragment;
 import com.weizhi.redmartcatalog.ui.productdetail.ProductDetailFragment;
-
-import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity implements
         CatalogFragment.OnFragmentInteractionListener,
@@ -28,7 +26,10 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(R.string.catalog_screen_title);
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null){
+            actionBar.setTitle(R.string.catalog_screen_title);
+        }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.addOnBackStackChangedListener(this);
@@ -62,7 +63,10 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void showTitle(@NonNull String title) {
-        getSupportActionBar().setTitle(title);
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null){
+            actionBar.setTitle(title);
+        }
     }
 
     @Override
@@ -73,11 +77,17 @@ public class MainActivity extends AppCompatActivity implements
             Fragment fragment = fragmentManager.findFragmentById(R.id.fragment);
             if(fragment instanceof CatalogFragment){
                 ((CatalogFragment) fragment).showCatalogScreen(true);
-                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                ActionBar actionBar = getSupportActionBar();
+                if(actionBar != null){
+                    actionBar.setDisplayHomeAsUpEnabled(false);
+                }
             }
         }
         else{
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            ActionBar actionBar = getSupportActionBar();
+            if(actionBar != null){
+                actionBar.setDisplayHomeAsUpEnabled(true);
+            }
         }
     }
 }

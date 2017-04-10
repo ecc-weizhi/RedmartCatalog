@@ -3,7 +3,6 @@ package com.weizhi.redmartcatalog.ui.catalog;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.AbsListView;
 
 /**
  * @author Lin Weizhi (ecc.weizhi@gmail.com)

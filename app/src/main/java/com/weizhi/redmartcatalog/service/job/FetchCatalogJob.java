@@ -77,7 +77,6 @@ public class FetchCatalogJob extends Job {
             }
         }
 
-        RetryConstraint constraint = RetryConstraint.createExponentialBackoff(runCount, 500);
-        return constraint;
+        return RetryConstraint.createExponentialBackoff(runCount, 500);
     }
 }
