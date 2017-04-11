@@ -1,5 +1,6 @@
 package com.weizhi.redmartcatalog.ui;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
@@ -8,6 +9,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.weizhi.redmartcatalog.R;
 import com.weizhi.redmartcatalog.model.Product;
@@ -45,12 +47,19 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void goToDetail(@NonNull Product product) {
+    public void goToDetail(@NonNull Product product, @NonNull View sharedView) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         ProductDetailFragment fragment = ProductDetailFragment.newInstance(product);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            fragment.setSharedElementEnterTransition(new SharedElementTransition());
+            fragment.setSharedElementReturnTransition(new SharedElementTransition());
+        }
+
         fragmentTransaction.replace(R.id.fragment, fragment)
+                .addSharedElement(sharedView, getString(R.string.product_detail_transition_name)+"0")
                 .addToBackStack(null)
                 .commit();
     }

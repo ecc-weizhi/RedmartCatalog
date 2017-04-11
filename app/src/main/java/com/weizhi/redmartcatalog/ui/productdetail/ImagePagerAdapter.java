@@ -2,6 +2,7 @@ package com.weizhi.redmartcatalog.ui.productdetail;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,9 @@ public class ImagePagerAdapter extends PagerAdapter {
 
         ImageView imageView = (ImageView)LayoutInflater.from(collection.getContext())
                 .inflate(R.layout.view_product_image_item, collection, false);
+
+        ViewCompat.setTransitionName(imageView,
+                imageView.getContext().getString(R.string.product_detail_transition_name)+position);
 
         Glide.with(mFragment)
                 .load(WsConstants.IMAGE_BASE_URL+image.getPath())

@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.LongSparseArray;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -69,6 +70,7 @@ class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.ViewHolder> imp
                 .load(WsConstants.IMAGE_BASE_URL+product.getMainImage().getPath())
                 .fitCenter()
                 .into(holder.productImage);
+        ViewCompat.setTransitionName(holder.productImage, String.valueOf(product.getId()));
 
         // image label
         switch(product.getPromotionType()){
@@ -284,6 +286,11 @@ class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.ViewHolder> imp
             vh.cartQuantityText.setText(String.valueOf(quantity));
             vh.addButton.setVisibility(View.INVISIBLE);
         }
+    }
+
+    int getAdapterPosition(@NonNull Product product){
+        Integer adapterPosition = mIdToPosition.get(product.getId());
+        return adapterPosition == null ? -1 : adapterPosition;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder implements

@@ -14,4 +14,5 @@
     <string name="notification_saved_to_list">Product saved to list</string>
     <string name="add">+</string>
     <string name="minus">-</string>
+    <string name="product_detail_transition_name">detail_image</string>
 </resources>

@@ -145,11 +145,13 @@ public class CatalogFragment extends Fragment implements
 
     @Override
     public void showGoToProductDetail(@NonNull Product product) {
-        mParent.goToDetail(product);
+        CatalogAdapter.ViewHolder vh = (CatalogAdapter.ViewHolder)mRecyclerView
+                .findViewHolderForAdapterPosition(mAdapter.getAdapterPosition(product));
+        mParent.goToDetail(product, vh.productImage);
     }
 
     public interface OnFragmentInteractionListener{
-        void goToDetail(@NonNull Product product);
+        void goToDetail(@NonNull Product product, View sharedView);
         void fragmentOnStart(@NonNull String title);
     }
 }
