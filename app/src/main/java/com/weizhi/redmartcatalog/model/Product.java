@@ -10,6 +10,8 @@ import java.io.Serializable;
  */
 
 public class Product implements Serializable{
+    private final int DEFAULT_CART_LIMIT = 24;
+
     private final long mId;
     private final String mTitle;
     private final String mDescription;
@@ -26,6 +28,7 @@ public class Product implements Serializable{
     private final ProductDescriptionField[] mSecondaryDescriptionField;
     private final int mPromotionType;
     private final String mSavingText;
+    private int mCartLimit = DEFAULT_CART_LIMIT;
 
     public Product(long id,
                    @NonNull String title,
@@ -42,7 +45,8 @@ public class Product implements Serializable{
                    boolean isFrozen,
                    @NonNull ProductDescriptionField[] secondaryDescriptionField,
                    int promotionType,
-                   @Nullable String savingText) {
+                   @Nullable String savingText,
+                   @Nullable Integer cartLimit) {
         mId = id;
         mTitle = title;
         mDescription = description;
@@ -59,6 +63,9 @@ public class Product implements Serializable{
         mSecondaryDescriptionField = secondaryDescriptionField;
         mPromotionType = promotionType;
         mSavingText = savingText;
+        if(cartLimit != null){
+            mCartLimit = cartLimit;
+        }
     }
 
     public long getId(){
@@ -131,5 +138,9 @@ public class Product implements Serializable{
     @Nullable
     public String getSavingText(){
         return mSavingText;
+    }
+
+    public int getCartLimit(){
+        return mCartLimit;
     }
 }

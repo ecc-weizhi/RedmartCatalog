@@ -49,12 +49,12 @@ class ProductJsonToProduct implements Deserializer<ProductJson, Product> {
 
         double price = from.pricing == null ? 0 : from.pricing.price;
         double promoPrice = from.pricing == null ? 0 : from.pricing.promoPrice;
-        boolean isOnSale = from.pricing == null ? false : from.pricing.onSale != 0;
+        boolean isOnSale = from.pricing != null && from.pricing.onSale != 0;
         String wtVol = from.measure == null ? null : from.measure.wtOrVol;
         int expiryTime = from.productLife == null ? 0 : from.productLife.time;
         String expiryMetric = from.productLife == null ? null : from.productLife.metric;
-        boolean isExpiryMinimum = from.productLife == null ? false : from.productLife.isMinimum;
-        boolean isFrozen = from.labels == null ? false : from.labels.contains("frozen");
+        boolean isExpiryMinimum = from.productLife != null && from.productLife.isMinimum;
+        boolean isFrozen = from.labels != null && from.labels.contains("frozen");
 
         return new Product(from.id,
                 from.title,
@@ -71,6 +71,7 @@ class ProductJsonToProduct implements Deserializer<ProductJson, Product> {
                 isFrozen,
                 secondaryDescriptions,
                 promotionType,
-                savingText);
+                savingText,
+                null);
     }
 }

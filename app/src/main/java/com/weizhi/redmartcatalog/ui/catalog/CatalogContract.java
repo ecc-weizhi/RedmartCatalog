@@ -13,7 +13,7 @@ import java.util.List;
 public interface CatalogContract {
     interface View{
         void addProductList(int page, int pageSize, List<Product> productList);
-        void showAddedToCart(@NonNull Product product);
+        void showCartQuantityChange(@NonNull Product product);
         void showGoToProductDetail(@NonNull Product product);
     }
 
@@ -23,5 +23,7 @@ public interface CatalogContract {
         void fetchCatalog(int page, int pageSize);
         void onAddToCartClick(@NonNull Product product);
         void onProductClick(@NonNull Product product);
+        void onMinusClick(@NonNull Product product);
+        void onPlusClick(@NonNull Product product);
     }
 }

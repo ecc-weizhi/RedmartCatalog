@@ -10,6 +10,7 @@ import com.birbit.android.jobqueue.scheduling.GcmJobSchedulerService;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.squareup.otto.Bus;
+import com.weizhi.redmartcatalog.model.Cart;
 import com.weizhi.redmartcatalog.network.RedmartWs;
 import com.weizhi.redmartcatalog.network.RedmartWsImpl;
 import com.weizhi.redmartcatalog.network.WsConstants;
@@ -27,6 +28,7 @@ public class MyApplication extends Application {
     private static Bus bus;
     private static RedmartWs mRedmartWs;
     private static NetworkChangeReceiver mNetworkChangeReceiver;
+    private Cart mCart;
     private JobManager jobManager;
 
     @Override
@@ -89,5 +91,12 @@ public class MyApplication extends Application {
             configureJobManager();
         }
         return jobManager;
+    }
+
+    public Cart getCart(){
+        if(mCart == null){
+            mCart = new Cart(Cart.MAX_QUANTITY);
+        }
+        return mCart;
     }
 }

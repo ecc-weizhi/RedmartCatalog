@@ -10,12 +10,14 @@ import com.weizhi.redmartcatalog.model.Product;
 
 public interface ProductDetailContract {
     interface View{
-        void showAddedToCart(@NonNull Product product);
+        void showAddToCart(int quantityInCart);
         void showSavedToList(@NonNull Product product);
     }
 
     interface ActionListener{
         void onSaveToListClick(@NonNull Product product);
         void onAddToCartClick(@NonNull Product product);
+        void onMinusClick(@NonNull Product product);
+        void onPlusClick(@NonNull Product product);
     }
 }

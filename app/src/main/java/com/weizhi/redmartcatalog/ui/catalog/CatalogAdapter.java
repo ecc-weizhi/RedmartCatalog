@@ -4,6 +4,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.LongSparseArray;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.weizhi.redmartcatalog.R;
+import com.weizhi.redmartcatalog.model.Cart;
 import com.weizhi.redmartcatalog.model.Product;
 import com.weizhi.redmartcatalog.network.WsConstants;
 
@@ -30,22 +32,25 @@ import java.util.Locale;
  * @author Lin Weizhi (ecc.weizhi@gmail.com)
  */
 
-public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.ViewHolder> implements
+class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.ViewHolder> implements
         CatalogClickListener,
         LoadMoreScrollListener.LoadMoreCallback{
-    public static final int PAGE_SIZE = 20;
+    static final int PAGE_SIZE = 20;
 
     private AdapterInterface mParent;
     private Fragment mFragment;
 
+    private Cart mCart;
+    private LongSparseArray<Integer> mIdToPosition = new LongSparseArray<>();
     private List<Product> mProductList = new ArrayList<>();
     private boolean mIsLoadingMore = false;
     private boolean mHasNoMoreData = false;
     private int mLastLoadedPage = -1;
 
-    public CatalogAdapter(@NonNull AdapterInterface parent, Fragment fragment){
+    CatalogAdapter(@NonNull AdapterInterface parent, Fragment fragment, @NonNull Cart cart){
         mParent = parent;
         mFragment = fragment;
+        mCart = cart;
     }
 
     @Override
@@ -165,6 +170,9 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.ViewHold
                     Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
             holder.priceText.setText(price);
         }
+
+        // cart
+        showCartQuantity(holder, mCart.getQuantity(product.getId()));
     }
 
     @Override
@@ -185,6 +193,18 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.ViewHold
     }
 
     @Override
+    public void onMinusClick(int adapterPosition) {
+        Product product = mProductList.get(adapterPosition);
+        mParent.onMinusClick(product);
+    }
+
+    @Override
+    public void onPlusClick(int adapterPosition) {
+        Product product = mProductList.get(adapterPosition);
+        mParent.onPlusClick(product);
+    }
+
+    @Override
     public void tryLoadMore() {
         if(mHasNoMoreData){
             return;
@@ -196,9 +216,29 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.ViewHold
         }
     }
 
-    public void updateDataSet(int page, List<Product> productList){
+    void setDataSet(@NonNull List<Product> productList){
+        mProductList = productList;
+        mLastLoadedPage = productList.size() / PAGE_SIZE;
+        for(int i=0; i<productList.size(); i++){
+            Product product = productList.get(i);
+            mIdToPosition.put(product.getId(), i);
+        }
+        notifyDataSetChanged();
+    }
+
+    List<Product> getDataSet(){
+        return mProductList;
+    }
+
+    void updateDataSet(int page, List<Product> productList){
         if(mLastLoadedPage + 1 <= page){
+            int startingIndex = mProductList.size();
             mProductList.addAll(page * PAGE_SIZE, productList);
+
+            for(int i=0; i<productList.size(); i++){
+                Product product = productList.get(i);
+                mIdToPosition.put(product.getId(), startingIndex+i);
+            }
 
             if(productList.size() != PAGE_SIZE){
                 mHasNoMoreData = true;
@@ -216,8 +256,34 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.ViewHold
         }
     }
 
-    public void setIsLoadingMore(boolean isLoadingMore){
+    void updateItem(@NonNull Product product){
+        int position = mIdToPosition.get(product.getId());
+        mProductList.set(position, product);
+        notifyItemChanged(position);
+    }
+
+    void setIsLoadingMore(boolean isLoadingMore){
         mIsLoadingMore = isLoadingMore;
+    }
+
+    private void showCartQuantity(ViewHolder vh, int quantity){
+        if(quantity == 0){
+            vh.border.setVisibility(View.GONE);
+            vh.addBackground.setVisibility(View.GONE);
+            vh.minusText.setVisibility(View.GONE);
+            vh.plusText.setVisibility(View.GONE);
+            vh.cartQuantityText.setVisibility(View.GONE);
+            vh.addButton.setVisibility(View.VISIBLE);
+        }
+        else{
+            vh.border.setVisibility(View.VISIBLE);
+            vh.addBackground.setVisibility(View.VISIBLE);
+            vh.minusText.setVisibility(View.VISIBLE);
+            vh.plusText.setVisibility(View.VISIBLE);
+            vh.cartQuantityText.setVisibility(View.VISIBLE);
+            vh.cartQuantityText.setText(String.valueOf(quantity));
+            vh.addButton.setVisibility(View.INVISIBLE);
+        }
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder implements
@@ -232,6 +298,13 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.ViewHold
         View dividerView;
         Button addButton;
         TextView productImageLabel;
+
+        View border;
+        View addBackground;
+        TextView minusText;
+        TextView plusText;
+        TextView cartQuantityText;
+
         private CatalogClickListener mListener;
 
         ViewHolder(View v, CatalogClickListener listener){
@@ -248,6 +321,12 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.ViewHold
             addButton = (Button) v.findViewById(R.id.product_add_button);
             productImageLabel = (TextView) v.findViewById(R.id.product_image_label);
 
+            border = v.findViewById(R.id.border);
+            addBackground = v.findViewById(R.id.product_add_background);
+            minusText = (TextView)v.findViewById(R.id.minus_button);
+            plusText = (TextView)v.findViewById(R.id.plus_button);
+            cartQuantityText = (TextView)v.findViewById(R.id.cart_quantity_text);
+
             // expiry label
             int expiryLabelColor = ContextCompat.getColor(expiryText.getContext(),
                     R.color.label_green);
@@ -260,6 +339,8 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.ViewHold
 
             addButton.setOnClickListener(this);
             mainView.setOnClickListener(this);
+            minusText.setOnClickListener(this);
+            plusText.setOnClickListener(this);
         }
 
         @Override
@@ -272,13 +353,23 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.ViewHold
                 case R.id.product_add_button:
                     mListener.onAddToCartClick(getAdapterPosition());
                     break;
+
+                case R.id.minus_button:
+                    mListener.onMinusClick(getAdapterPosition());
+                    break;
+
+                case R.id.plus_button:
+                    mListener.onPlusClick(getAdapterPosition());
+                    break;
             }
         }
     }
 
-    public interface AdapterInterface{
+    interface AdapterInterface{
         void fetchCatalog(int page, int pageSize);
         void onProductClick(@NonNull Product product);
         void onAddToCartClick(@NonNull Product product);
+        void onMinusClick(@NonNull Product product);
+        void onPlusClick(@NonNull Product product);
     }
 }

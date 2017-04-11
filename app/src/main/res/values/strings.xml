@@ -12,4 +12,6 @@
     <string name="catalog_screen_title">RedMart Catalog</string>
     <string name="notification_added_to_cart">Product added to cart</string>
     <string name="notification_saved_to_list">Product saved to list</string>
+    <string name="add">+</string>
+    <string name="minus">-</string>
 </resources>

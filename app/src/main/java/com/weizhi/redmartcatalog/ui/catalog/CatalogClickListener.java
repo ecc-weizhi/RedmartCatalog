@@ -4,7 +4,9 @@ package com.weizhi.redmartcatalog.ui.catalog;
  * @author Lin Weizhi (ecc.weizhi@gmail.com)
  */
 
-public interface CatalogClickListener {
+interface CatalogClickListener {
     void onItemClick(int adapterPosition);
     void onAddToCartClick(int adapterPosition);
+    void onMinusClick(int adapterPosition);
+    void onPlusClick(int adapterPosition);
 }

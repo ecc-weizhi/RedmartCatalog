@@ -25,6 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.viewpagerindicator.CirclePageIndicator;
+import com.weizhi.redmartcatalog.MyApplication;
 import com.weizhi.redmartcatalog.R;
 import com.weizhi.redmartcatalog.model.Product;
 import com.weizhi.redmartcatalog.model.ProductDescriptionField;
@@ -55,6 +56,9 @@ public class ProductDetailFragment extends Fragment implements
     private TextView mPriceText;
     private Button mSaveToListButton;
     private TextView mImageLabel;
+    private TextView mMinusText;
+    private TextView mPlusText;
+    private TextView mCartQuantityText;
 
     private OnFragmentInteractionListener mParent;
     private ProductDetailContract.ActionListener mPresenter;
@@ -75,7 +79,7 @@ public class ProductDetailFragment extends Fragment implements
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        mPresenter = new ProductDetailPresenter(this);
+        mPresenter = new ProductDetailPresenter(this, MyApplication.getInstance().getCart());
         mProduct = (Product)getArguments().getSerializable(ARGS_PRODUCT);
     }
 
@@ -107,11 +111,16 @@ public class ProductDetailFragment extends Fragment implements
         mPriceText = (TextView)mRootView.findViewById(R.id.product_price_text);
         mSaveToListButton = (Button)mRootView.findViewById(R.id.product_save_to_list_button);
         mImageLabel = (TextView)mRootView.findViewById(R.id.product_image_label);
+        mMinusText = (TextView)mRootView.findViewById(R.id.minus_button);
+        mPlusText = (TextView)mRootView.findViewById(R.id.plus_button);
+        mCartQuantityText = (TextView)mRootView.findViewById(R.id.cart_quantity_text);
 
         issue221387Workaround(mFloatingButtonLayout);
 
         mFloatingButtonLayout.setOnClickListener(this);
         mSaveToListButton.setOnClickListener(this);
+        mMinusText.setOnClickListener(this);
+        mPlusText.setOnClickListener(this);
 
         // images
         mAdapter = new ImagePagerAdapter(this);
@@ -248,6 +257,8 @@ public class ProductDetailFragment extends Fragment implements
         // floating button
         int floatingButtonColor = ContextCompat.getColor(getActivity(), R.color.colorPrimary);
         ((GradientDrawable)mFloatingButtonLayout.getBackground()).setColor(floatingButtonColor);
+        int quantityInCart = MyApplication.getInstance().getCart().getQuantity(mProduct.getId());
+        showAddToCart(quantityInCart);
 
         // about the product
         CardView aboutCard = (CardView)inflater.inflate(R.layout.view_product_description,
@@ -282,7 +293,7 @@ public class ProductDetailFragment extends Fragment implements
     @Override
     public void onStart(){
         super.onStart();
-        mParent.showTitle(mProduct.getTitle());
+        mParent.fragmentOnStart(mProduct.getTitle());
     }
 
     @Override
@@ -315,15 +326,32 @@ public class ProductDetailFragment extends Fragment implements
             case R.id.floating_button_layout:
                 mPresenter.onAddToCartClick(mProduct);
                 break;
+
+            case R.id.minus_button:
+                mPresenter.onMinusClick(mProduct);
+                break;
+
+            case R.id.plus_button:
+                mPresenter.onPlusClick(mProduct);
+                break;
         }
     }
 
     @Override
-    public void showAddedToCart(@NonNull Product product) {
-        Snackbar sb = Snackbar.make(mRootView, R.string.notification_added_to_cart, Snackbar.LENGTH_SHORT);
-        sb.getView().setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark));
-        sb.setActionTextColor(Color.WHITE);
-        sb.show();
+    public void showAddToCart(int quantityInCart) {
+        if(quantityInCart == 0){
+            mAddToCartText.setVisibility(View.VISIBLE);
+            mMinusText.setVisibility(View.GONE);
+            mCartQuantityText.setVisibility(View.GONE);
+            mPlusText.setVisibility(View.GONE);
+        }
+        else{
+            mAddToCartText.setVisibility(View.INVISIBLE);
+            mMinusText.setVisibility(View.VISIBLE);
+            mCartQuantityText.setVisibility(View.VISIBLE);
+            mPlusText.setVisibility(View.VISIBLE);
+            mCartQuantityText.setText(String.valueOf(quantityInCart));
+        }
     }
 
     @Override
@@ -335,6 +363,6 @@ public class ProductDetailFragment extends Fragment implements
     }
 
     public interface OnFragmentInteractionListener{
-        void showTitle(@NonNull String title);
+        void fragmentOnStart(@NonNull String title);
     }
 }
